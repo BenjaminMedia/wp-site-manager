@@ -1,0 +1,162 @@
+<?php
+/**
+ * Plugin Name: WP Site Manager
+ * Plugin URI: http://bonnierpublications.com
+ * Description: Service for the site manager
+ * Version: 0.0.1
+ * Author: Michael Sørensen
+ * Author URI: http://bonnierpublications.com
+ */
+
+namespace WpSiteManager;
+
+//use WpSiteManager\Repositories\CategoryRepository;
+
+
+// Do not access this file directly
+use WpSiteManager\Repositories\CategoryRepository;
+use WpSiteManager\Repositories\SiteRepository;
+use WpSiteManager\Repositories\TagRepository;
+use WpSiteManager\Repositories\VocabularyRepository;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// Handle autoload so we can use namespaces
+spl_autoload_register(function ($className) {
+
+    if (strpos($className, __NAMESPACE__) !== false) {
+        $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
+        //require_once(__DIR__ . DIRECTORY_SEPARATOR . $className . '.php');
+        require_once(__DIR__ . DIRECTORY_SEPARATOR . Plugin::CLASS_DIR . DIRECTORY_SEPARATOR . $className . '.php');
+    }
+});
+
+// Load plugin api
+require_once (__DIR__ . '/'.Plugin::CLASS_DIR.'/Api.php');
+
+class Plugin
+{
+    /**
+     * Text domain for translators
+     */
+    const TEXT_DOMAIN = 'wp-site-manager';
+    const CLASS_DIR = 'src';
+
+    /**
+     * @var object Instance of this class.
+     */
+    private static $instance;
+
+
+    private $categoryRepository;
+    private $siteRepository;
+    private $tagRepository;
+    private $vocabularyRepository;
+
+    /**
+     * @var string Filename of this class.
+     */
+    public $file;
+
+    /**
+     * @var string Basename of this class.
+     */
+    public $basename;
+
+    /**
+     * @var string Plugins directory for this plugin.
+     */
+    public $pluginDir;
+
+    /**
+     * @var Object
+     */
+    public $scripts;
+
+    /**
+     * @var string Plugins url for this plugin.
+     */
+    public $pluginUrl;
+
+    /**
+     * Do not load this more than once.
+     */
+    private function __construct()
+    {
+        // Set plugin file variables
+        $this->file = __FILE__;
+        $this->basename = plugin_basename($this->file);
+        $this->pluginDir = plugin_dir_path($this->file);
+        $this->pluginUrl = plugin_dir_url($this->file);
+        // Load textdomain
+        load_plugin_textdomain(self::TEXT_DOMAIN, false, dirname($this->basename) . '/languages');
+
+        $this->categoryRepository = new CategoryRepository();
+        $this->siteRepository = new SiteRepository();
+        $this->tagRepository = new TagRepository();
+        $this->vocabularyRepository = new VocabularyRepository();
+        //$this->scripts = new Scripts();
+    }
+
+    private function bootstrap() {
+        //Post::watch_post_changes($this->settings);
+        //$this->scripts->bootstrap($this->settings);
+        //CxenseApi::bootstrap($this->settings);
+    }
+
+    /**
+     * Returns the instance of this class.
+     */
+    public static function instance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self;
+            global $wpSiteManager;
+            $wpSiteManager = self::$instance;
+            self::$instance->bootstrap();
+
+            /**
+             * Run after the plugin has been loaded.
+             */
+            do_action('wp_site_manager_loaded');
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * @return CategoryRepository
+     */
+    public function categories()
+    {
+        return $this->categoryRepository;
+    }
+
+    /**
+     * @return SiteRepository
+     */
+    public function sites()
+    {
+        return $this->siteRepository;
+    }
+
+    /**
+     * @return TagRepository
+     */
+    public function tags()
+    {
+        return $this->tagRepository;
+    }
+}
+
+/**
+ * @return Plugin $instance returns an instance of the plugin
+ */
+function instance()
+{
+    return Plugin::instance();
+}
+
+add_action('plugins_loaded', __NAMESPACE__ . '\instance', 0);
