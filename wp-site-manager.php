@@ -3,7 +3,7 @@
  * Plugin Name: WP Site Manager
  * Plugin URI: http://bonnierpublications.com
  * Description: Service for the site manager
- * Version: 0.0.1
+ * Version: 0.1.0
  * Author: Michael Sørensen
  * Author URI: http://bonnierpublications.com
  */
@@ -19,6 +19,7 @@ use WpSiteManager\Services\CategoryService;
 use WpSiteManager\Services\SiteService;
 use WpSiteManager\Services\TagService;
 use WpSiteManager\Services\VocabularyService;
+use WpSiteManager\Settings\SettingsPage;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -49,6 +50,8 @@ class Plugin
      * @var object Instance of this class.
      */
     private static $instance;
+
+    private $settings;
 
     /**
      * @var CategoryRepository
@@ -108,6 +111,8 @@ class Plugin
         // Load textdomain
         load_plugin_textdomain(self::TEXT_DOMAIN, false, dirname($this->basename) . '/languages');
 
+        $this->settings = new SettingsPage();
+
         $this->categoryService = new CategoryService(new CategoryRepository());
         $this->siteService = new SiteService(new SiteRepository());
         $this->tagService = new TagService(new TagRepository());
@@ -163,6 +168,11 @@ class Plugin
     public function vocabularies()
     {
         return $this->vocabularyService;
+    }
+
+    public function settings()
+    {
+        return $this->settings();
     }
 }
 
