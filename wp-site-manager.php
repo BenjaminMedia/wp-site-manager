@@ -10,14 +10,15 @@
 
 namespace WpSiteManager;
 
-//use WpSiteManager\Repositories\CategoryRepository;
-
-
 // Do not access this file directly
 use WpSiteManager\Repositories\CategoryRepository;
 use WpSiteManager\Repositories\SiteRepository;
 use WpSiteManager\Repositories\TagRepository;
 use WpSiteManager\Repositories\VocabularyRepository;
+use WpSiteManager\Services\CategoryService;
+use WpSiteManager\Services\SiteService;
+use WpSiteManager\Services\TagService;
+use WpSiteManager\Services\VocabularyService;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -49,11 +50,25 @@ class Plugin
      */
     private static $instance;
 
+    /**
+     * @var CategoryRepository
+     */
+    private $categoryService;
 
-    private $categoryRepository;
-    private $siteRepository;
-    private $tagRepository;
-    private $vocabularyRepository;
+    /**
+     * @var SiteRepository
+     */
+    private $siteService;
+
+    /**
+     * @var TagRepository
+     */
+    private $tagService;
+
+    /**
+     * @var VocabularyRepository
+     */
+    private $vocabularyService;
 
     /**
      * @var string Filename of this class.
@@ -93,17 +108,10 @@ class Plugin
         // Load textdomain
         load_plugin_textdomain(self::TEXT_DOMAIN, false, dirname($this->basename) . '/languages');
 
-        $this->categoryRepository = new CategoryRepository();
-        $this->siteRepository = new SiteRepository();
-        $this->tagRepository = new TagRepository();
-        $this->vocabularyRepository = new VocabularyRepository();
-        //$this->scripts = new Scripts();
-    }
-
-    private function bootstrap() {
-        //Post::watch_post_changes($this->settings);
-        //$this->scripts->bootstrap($this->settings);
-        //CxenseApi::bootstrap($this->settings);
+        $this->categoryService = new CategoryService(new CategoryRepository());
+        $this->siteService = new SiteService(new SiteRepository());
+        $this->tagService = new TagService(new TagRepository());
+        $this->vocabularyService = new VocabularyService(new VocabularyRepository());
     }
 
     /**
@@ -115,7 +123,6 @@ class Plugin
             self::$instance = new self;
             global $wpSiteManager;
             $wpSiteManager = self::$instance;
-            self::$instance->bootstrap();
 
             /**
              * Run after the plugin has been loaded.
@@ -131,7 +138,7 @@ class Plugin
      */
     public function categories()
     {
-        return $this->categoryRepository;
+        return $this->categoryService;
     }
 
     /**
@@ -139,7 +146,7 @@ class Plugin
      */
     public function sites()
     {
-        return $this->siteRepository;
+        return $this->siteService;
     }
 
     /**
@@ -147,7 +154,15 @@ class Plugin
      */
     public function tags()
     {
-        return $this->tagRepository;
+        return $this->tagService;
+    }
+
+    /**
+     * @return VocabularyRepository
+     */
+    public function vocabularies()
+    {
+        return $this->vocabularyService;
     }
 }
 

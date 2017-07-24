@@ -2,18 +2,31 @@
 
 namespace WpSiteManager\Repositories;
 
+use WpSiteManager\Http\SiteManagerClient;
 use WpSiteManager\Contracts\VocabularyContract;
-use WpSiteManager\Services\SiteManagerService;
-use GuzzleHttp\Exception\ClientException;
 
-
+/**
+ * Class VocabularyRepository
+ * @package WpSiteManager\Repositories
+ */
 class VocabularyRepository implements VocabularyContract
 {
+    protected $siteManagerClient;
 
-    public static function getAll($page = 1)
+    function __construct()
+    {
+        $this->siteManagerClient = new SiteManagerClient();
+    }
+
+    /**
+     * Get all vocabularies
+     * @param int $page
+     * @return array
+     */
+    public function getAll($page = 1)
     {
         try {
-            $response = SiteManagerService::getInstance()->get('/api/v1/vocabularies', [
+            $response = $this->siteManagerClient->get('/api/v1/vocabularies', [
                 'query' => [
                     'page' => $page
                 ]
@@ -26,10 +39,15 @@ class VocabularyRepository implements VocabularyContract
             [];
     }
 
-    public static function findById($id)
+    /**
+     * Get vocabulary by ID
+     * @param $id
+     * @return array|mixed|null|object
+     */
+    public function findById($id)
     {
         try {
-            $response = SiteManagerService::getInstance()->get('/api/v1/vocabularies/'.$id);
+            $response = $this->siteManagerClient->get('/api/v1/vocabularies/'.$id);
         } catch (ClientException $e) {
             return null;
         }
@@ -38,10 +56,16 @@ class VocabularyRepository implements VocabularyContract
             null;
     }
 
-    public static function findByAppId($id, $page = 1)
+    /**
+     * Get vocabulary from App ID
+     * @param $id
+     * @param int $page
+     * @return array|mixed|null|object
+     */
+    public function findByAppId($id, $page=1)
     {
         try {
-            $response = SiteManagerService::getInstance()->get('/api/v1/vocabularies/app/'.$id, [
+            $response = $this->siteManagerClient->get('/api/v1/vocabularies/app/'.$id, [
                 'query' => [
                     'page' => $page
                 ]

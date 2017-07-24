@@ -2,70 +2,70 @@
 
 namespace WpSiteManager\Repositories;
 
+use WpSiteManager\Http\SiteManagerClient;
 use WpSiteManager\Contracts\CategoryContract;
-use WpSiteManager\Services\CategoryService;
-use WpSiteManager\Services\SiteManagerService;
-use GuzzleHttp\Exception\ClientException;
 
+/**
+ * Class CategoryRepository
+ * @package WpSiteManager\Repositories
+ */
 class CategoryRepository implements CategoryContract
 {
-    protected $categoryService;
+    protected $siteManagerClient;
 
+    /**
+     * CategoryRepository constructor.
+     */
     function __construct()
     {
-        $this->categoryService = new CategoryService();
+        $this->siteManagerClient = new SiteManagerClient();
     }
 
-    public function getAll()
-    {
-        return $this->categoryService->getAll();
-    }
-
-    public function findById($id)
-    {
-        return $this->categoryService->findById($id);
-    }
-
-    public function findByBrandId($id)
-    {
-        return $this->categoryService->findByBrandId($id);
-    }
-
-    /*private $siteManagerService;
-
-    function __construct()
-    {
-        $this->siteManagerService = new SiteManagerService();
-    }
-
+    /**
+     * Get all the categories
+     * @return array
+     */
     public function getAll()
     {
         try {
-            $response = $this->siteManagerService->get('/api/v1/categories');
+            $response = $this->siteManagerClient->get('/api/v1/categories');
         } catch (ClientException $e) {
             return [];
         }
+
         return $response->getStatusCode() === 200 ?
             json_decode($response->getBody()->getContents())->data :
             [];
     }
 
+    /**
+     * Find the category from the ID
+     * @param $id
+     * @return array|mixed|null|object
+     */
     public function findById($id)
     {
         try {
-            $response = SiteManagerService::getInstance()->get('/api/v1/categories/'.$id);
+            $response = $this->siteManagerClient->get('/api/v1/categories/'.$id);
         } catch (ClientException $e) {
             return null;
         }
+
         return $response->getStatusCode() === 200 ?
             json_decode($response->getBody()->getContents()) :
             null;
     }
 
+    /**
+     * Find all categories by brand id
+     * @param $id
+     * @param int $page
+     * @return array|mixed|null|object
+     */
     public function findByBrandId($id, $page = 1)
     {
         try {
-            $response = SiteManagerService::getInstance()->get('/api/v1/categories/brand/' . $id, [
+            $response = $this->siteManagerClient->get('/api/v1/categories/brand/' . $id, [
                 'query' => [
                     'page' => $page
                 ]
@@ -73,8 +73,9 @@ class CategoryRepository implements CategoryContract
         } catch (ClientException $e) {
             return null;
         }
+
         return $response->getStatusCode() === 200 ?
             json_decode($response->getBody()->getContents()) :
             null;
-    }*/
+    }
 }

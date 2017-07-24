@@ -2,41 +2,47 @@
 
 namespace WpSiteManager\Services;
 
-use WpSiteManager\Http\SiteManagerClient;
+use WpSiteManager\Contracts\SiteContract;
 
-class SiteService
+class SiteService extends BaseService
 {
-    protected $siteManagerClient;
+    protected $siteRepository;
 
-    function __construct()
+    /**
+     * SiteService constructor.
+     * @param SiteContract $siteRepository
+     */
+    function __construct(SiteContract $siteRepository)
     {
-        $this->siteManagerClient = new SiteManagerClient();
+        $this->siteRepository = new $siteRepository;
     }
 
+    /**
+     * @return mixed
+     */
     public function getAll()
     {
-        try {
-            $response = $this->siteManagerClient->get('/api/v1/sites');
-        } catch (ClientException $e) {
-            return [];
+        $result = wp_cache_get('sm_'. self::SITEMANAGER_SITE_CACHEKEY .'_all');
+        if (false === $result) {
+            $result = $this->siteRepository->getAll();
+            wp_cache_set('sm_'. self::SITEMANAGER_SITE_CACHEKEY .'_all', $result, '', self::SITEMANAGER_CACHE_EXPIRE);
         }
-        return $response->getStatusCode() === 200 ?
-            json_decode($response->getBody()->getContents())->data :
-            [];
+
+        return $result;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function findById($id)
     {
-        if(is_null($id)) {
-            return null;
+        $result = wp_cache_get('sm_'. self::SITEMANAGER_SITE_CACHEKEY .'_'. $id);
+        if (false === $result) {
+            $result = $this->siteRepository->findById($id);
+            wp_cache_set('sm_'. self::SITEMANAGER_SITE_CACHEKEY .'_' . $id, $result, '', self::SITEMANAGER_CACHE_EXPIRE);
         }
-        try {
-            $response = $this->siteManagerClient->get('/api/v1/sites/'.$id);
-        } catch (ClientException $e) {
-            return null;
-        }
-        return $response->getStatusCode() === 200 ?
-            json_decode($response->getBody()->getContents()) :
-            null;
+
+        return $result;
     }
 }

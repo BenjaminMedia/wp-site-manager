@@ -2,54 +2,63 @@
 
 namespace WpSiteManager\Services;
 
-use WpSiteManager\Http\SiteManagerClient;
+use WpSiteManager\Contracts\CategoryContract;
 
-class CategoryService
+class CategoryService extends BaseService
 {
-    protected $siteManagerClient;
+    protected $categoryRepository;
 
-    function __construct()
+    /**
+     * CategoryService constructor.
+     * @param CategoryContract $categoryRepository
+     */
+    function __construct(CategoryContract $categoryRepository)
     {
-        $this->siteManagerClient = new SiteManagerClient();
+        $this->categoryRepository = new $categoryRepository;
     }
 
+    /**
+     * @return mixed
+     */
     public function getAll()
     {
-        try {
-            $response = $this->siteManagerClient->get('/api/v1/categories');
-        } catch (ClientException $e) {
-            return [];
+        $result = wp_cache_get('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_all');
+        if (false === $result) {
+            $result = $this->categoryRepository->getAll();
+            wp_cache_set('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_all', $result, '', self::SITEMANAGER_CACHE_EXPIRE);
         }
-        return $response->getStatusCode() === 200 ?
-            json_decode($response->getBody()->getContents())->data :
-            [];
+
+        return $result;
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function findById($id)
     {
-        try {
-            $response = $this->siteManagerClient->get('/api/v1/categories/'.$id);
-        } catch (ClientException $e) {
-            return null;
+        $result = wp_cache_get('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_'. $id);
+        if (false === $result) {
+            $result = $this->categoryRepository->findById($id);
+            wp_cache_set('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_'. $id, $result, '', self::SITEMANAGER_CACHE_EXPIRE);
         }
-        return $response->getStatusCode() === 200 ?
-            json_decode($response->getBody()->getContents()) :
-            null;
+
+        return $result;
     }
 
+    /**
+     * @param $id
+     * @param int $page
+     * @return mixed
+     */
     public function findByBrandId($id, $page = 1)
     {
-        try {
-            $response = $this->siteManagerClient->get('/api/v1/categories/brand/' . $id, [
-                'query' => [
-                    'page' => $page
-                ]
-            ]);
-        } catch (ClientException $e) {
-            return null;
+        $result = wp_cache_get('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_brand_'. $id .'_'. $page);
+        if (false === $result) {
+            $result = $this->categoryRepository->findByBrandId($id, $page);
+            wp_cache_set('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_brand_'. $id .'_'. $page, '', self::SITEMANAGER_CACHE_EXPIRE);
         }
-        return $response->getStatusCode() === 200 ?
-            json_decode($response->getBody()->getContents()) :
-            null;
+
+        return $result;
     }
 }
