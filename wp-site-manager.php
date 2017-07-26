@@ -172,7 +172,7 @@ class Plugin
 
     public function settings()
     {
-        return $this->settings();
+        return $this->settings;
     }
 }
 
