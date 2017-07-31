@@ -3,7 +3,7 @@
  * Plugin Name: WP Site Manager
  * Plugin URI: http://bonnierpublications.com
  * Description: Service for the site manager
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Michael Sørensen
  * Author URI: http://bonnierpublications.com
  */
@@ -172,7 +172,7 @@ class Plugin
 
     public function settings()
     {
-        return $this->settings();
+        return $this->settings;
     }
 }
 
