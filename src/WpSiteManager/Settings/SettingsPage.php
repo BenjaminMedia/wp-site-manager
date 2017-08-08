@@ -16,10 +16,10 @@ class SettingsPage
     const SETTINGS_PAGE = 'bp_sm_settings_page';
     const NOTICE_PREFIX = 'Site Manager:';
     const SETTINGS_TOOLBAR_NAME = 'Site Manager';
-    const SETTING_SITE = 'sitemanger';
+    const SETTING_SITE = 'sitemanager';
 
     private $settingsFields = [
-        'site' => [
+        'sitemanager' => [
             'type' => 'select',
             'name' => 'Site',
             'options_callback' => [__CLASS__, 'siteManagerGetSites']
