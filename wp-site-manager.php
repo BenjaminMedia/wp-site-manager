@@ -11,10 +11,14 @@
 namespace WpSiteManager;
 
 // Do not access this file directly
+use WpSiteManager\Repositories\AppRepository;
+use WpSiteManager\Repositories\BrandRepository;
 use WpSiteManager\Repositories\CategoryRepository;
 use WpSiteManager\Repositories\SiteRepository;
 use WpSiteManager\Repositories\TagRepository;
 use WpSiteManager\Repositories\VocabularyRepository;
+use WpSiteManager\Services\AppService;
+use WpSiteManager\Services\BrandService;
 use WpSiteManager\Services\CategoryService;
 use WpSiteManager\Services\SiteService;
 use WpSiteManager\Services\TagService;
@@ -57,6 +61,16 @@ class Plugin
      * @var CategoryRepository
      */
     private $categoryService;
+
+    /**
+     * @var AppRepository
+     */
+    private $AppService;
+
+    /**
+     * @var BrandRepository
+     */
+    private $brandService;
 
     /**
      * @var SiteRepository
@@ -117,6 +131,8 @@ class Plugin
         $this->siteService = new SiteService(new SiteRepository());
         $this->tagService = new TagService(new TagRepository());
         $this->vocabularyService = new VocabularyService(new VocabularyRepository());
+        $this->brandService = new BrandService(new BrandRepository());
+        $this->AppService = new AppService(new AppRepository());
     }
 
     /**
@@ -144,6 +160,22 @@ class Plugin
     public function categories()
     {
         return $this->categoryService;
+    }
+
+    /**
+     * @return BrandRepository
+     */
+    public function apps()
+    {
+        return $this->AppService;
+    }
+
+    /**
+     * @return BrandRepository
+     */
+    public function brands()
+    {
+        return $this->brandService;
     }
 
     /**
