@@ -3,8 +3,8 @@
  * Plugin Name: WP Site Manager
  * Plugin URI: http://bonnierpublications.com
  * Description: Service for the site manager
- * Version: 0.1.2
- * Author: Michael Sørensen
+ * Version: 0.1.3
+ * Author: Michael Sørensen & Frederik Rabøl
  * Author URI: http://bonnierpublications.com
  */
 
