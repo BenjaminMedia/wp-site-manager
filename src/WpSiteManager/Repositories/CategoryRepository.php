@@ -1,9 +1,9 @@
 <?php
 
-namespace WpSiteManager\Repositories;
+namespace wpSiteManager\Repositories;
 
-use WpSiteManager\Http\SiteManagerClient;
-use WpSiteManager\Contracts\CategoryContract;
+use wpSiteManager\Http\SiteManagerClient;
+use wpSiteManager\Contracts\CategoryContract;
 
 /**
  * Class CategoryRepository
@@ -47,6 +47,24 @@ class CategoryRepository implements CategoryContract
     {
         try {
             $response = $this->siteManagerClient->get('/api/v1/categories/'.$id);
+        } catch (ClientException $e) {
+            return null;
+        }
+
+        return $response->getStatusCode() === 200 ?
+            json_decode($response->getBody()->getContents()) :
+            null;
+    }
+
+    /**
+     * Find the category from the Content Hub Id
+     * @param $id
+     * @return array|mixed|null|object
+     */
+    public function findByContentHubId($id)
+    {
+        try {
+            $response = $this->siteManagerClient->get('/api/v1/categories/content-hub-id/'.$id);
         } catch (ClientException $e) {
             return null;
         }
