@@ -1,8 +1,8 @@
 <?php
 
-namespace WpSiteManager\Services;
+namespace wpSiteManager\Services;
 
-use WpSiteManager\Contracts\CategoryContract;
+use wpSiteManager\Contracts\CategoryContract;
 
 class CategoryService extends BaseService
 {
@@ -40,6 +40,21 @@ class CategoryService extends BaseService
         $result = wp_cache_get('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_'. $id);
         if (false === $result) {
             $result = $this->categoryRepository->findById($id);
+            wp_cache_set('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_'. $id, $result, '', self::SITEMANAGER_CACHE_EXPIRE);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findByContentHubId($id)
+    {
+        $result = wp_cache_get('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_'. $id);
+        if (false === $result) {
+            $result = $this->categoryRepository->findByContentHubId($id);
             wp_cache_set('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_'. $id, $result, '', self::SITEMANAGER_CACHE_EXPIRE);
         }
 
