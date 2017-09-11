@@ -2,8 +2,8 @@
 
 namespace wpSiteManager\Repositories;
 
-use wpSiteManager\Http\SiteManagerClient;
-use wpSiteManager\Contracts\CategoryContract;
+use WpSiteManager\Http\SiteManagerClient;
+use WpSiteManager\Contracts\CategoryContract;
 
 /**
  * Class CategoryRepository
