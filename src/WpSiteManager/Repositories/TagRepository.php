@@ -77,4 +77,22 @@ class TagRepository implements TagContract
             json_decode($response->getBody()->getContents()) :
             null;
     }
+
+    /**
+     * Find the category from the Content Hub Id
+     * @param $id
+     * @return array|mixed|null|object
+     */
+    public function findByContentHubId($id)
+    {
+        try {
+            $response = $this->siteManagerClient->get('/api/v1/tags/content-hub-id/'.$id);
+        } catch (ClientException $e) {
+            return null;
+        }
+
+        return $response->getStatusCode() === 200 ?
+            json_decode($response->getBody()->getContents()) :
+            null;
+    }
 }

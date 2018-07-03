@@ -62,4 +62,19 @@ class TagService extends BaseService
 
         return $result;
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findByContentHubId($id)
+    {
+        $result = wp_cache_get('sm_'. self::SITEMANAGER_TAG_CACHEKEY .'_'. $id);
+        if (false === $result) {
+            $result = $this->tagRepository->findByContentHubId($id);
+            wp_cache_set('sm_'. self::SITEMANAGER_TAG_CACHEKEY .'_'. $id, $result, '', self::SITEMANAGER_CACHE_EXPIRE);
+        }
+
+        return $result;
+    }
 }
