@@ -9,5 +9,5 @@ interface CategoryContract
 
     public function findByBrandId($brandBrandId, $page = 0);
 
-    public function findByContentHubId($contenthubContenthubId);
+    public function findByContentHubId($contenthubId);
 }

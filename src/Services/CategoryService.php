@@ -33,12 +33,12 @@ class CategoryService extends BaseService
     }
 
     /**
-     * @param $id
+     * @param $categoryId
      * @return mixed
      */
     public function findById($categoryId)
     {
-        $cacheKey = sprtinf('%s_%s', self::SITEMANAGER_CATEGORY_CACHEKEY, $categoryId);
+        $cacheKey = sprintf('%s_%s', self::SITEMANAGER_CATEGORY_CACHEKEY, $categoryId);
         $result = wp_cache_get($cacheKey, self::SITEMANAGER_CACHE_GROUP);
         if (false === $result) {
             $result = $this->categoryRepository->findById($categoryId);
