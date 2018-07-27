@@ -76,4 +76,12 @@ class CategoryService extends BaseService
 
         return $result;
     }
+
+    /**
+     * @param String $contentHubId
+     */
+    public static function clearCache($contentHubId)
+    {
+        wp_cache_delete('sm_'. self::SITEMANAGER_CATEGORY_CACHEKEY .'_'. $contentHubId);
+    }
 }
