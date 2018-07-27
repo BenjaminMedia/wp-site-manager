@@ -17,7 +17,7 @@ class SiteRepository implements SiteContract
 
     public function __construct()
     {
-        $this->siteManagerClient = new SiteManagerClient();
+        $this->siteManagerClient = SiteManagerClient::getInstance();
     }
 
     /**

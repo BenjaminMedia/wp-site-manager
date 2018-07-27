@@ -19,7 +19,7 @@ class CategoryRepository implements CategoryContract
      */
     public function __construct()
     {
-        $this->siteManagerClient = new SiteManagerClient();
+        $this->siteManagerClient = SiteManagerClient::getInstance();
     }
 
     /**

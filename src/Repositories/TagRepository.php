@@ -16,7 +16,7 @@ class TagRepository implements TagContract
 
     public function __construct()
     {
-        $this->siteManagerClient = new SiteManagerClient();
+        $this->siteManagerClient = SiteManagerClient::getInstance();
     }
 
     /**

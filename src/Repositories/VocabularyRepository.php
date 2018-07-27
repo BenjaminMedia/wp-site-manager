@@ -16,7 +16,7 @@ class VocabularyRepository implements VocabularyContract
 
     public function __construct()
     {
-        $this->siteManagerClient = new SiteManagerClient();
+        $this->siteManagerClient = SiteManagerClient::getInstance();
     }
 
     /**
