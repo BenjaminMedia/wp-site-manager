@@ -2,6 +2,7 @@
 
 namespace wpSiteManager\Repositories;
 
+use GuzzleHttp\Exception\ClientException;
 use WpSiteManager\Http\SiteManagerClient;
 use WpSiteManager\Contracts\CategoryContract;
 
