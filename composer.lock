@@ -4,8 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "586bff0e1679905163b7b60c9d595f93",
+    "content-hash": "364f45191e65405c9164a39a29fa2465",
     "packages": [
+        {
+            "name": "bonnier/willow-mu-plugins",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:BenjaminMedia/willow-mu-plugins.git",
+                "reference": "c3d1869d2bf0beba9c994e0116345986e85270c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/BenjaminMedia/willow-mu-plugins/zipball/c3d1869d2bf0beba9c994e0116345986e85270c8",
+                "reference": "c3d1869d2bf0beba9c994e0116345986e85270c8",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.6",
+                "johnpbloch/wordpress": "4.9.7",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "lucatume/wp-browser": "^2.1",
+                "phpunit/phpunit": "7.1.*"
+            },
+            "type": "wordpress-muplugin",
+            "autoload": {
+                "psr-4": {
+                    "Bonnier\\Willow\\MuPlugins\\": "src",
+                    "Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "unit": [
+                    "vendor/bin/codecept run wpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bonnier Publications",
+                    "email": "interactive@bonnier.dk"
+                }
+            ],
+            "description": "A collection of Must Use WordPress Plugins for Willow",
+            "support": {
+                "source": "https://github.com/BenjaminMedia/willow-mu-plugins/tree/master",
+                "issues": "https://github.com/BenjaminMedia/willow-mu-plugins/issues"
+            },
+            "time": "2018-08-02T12:54:46+00:00"
+        },
         {
             "name": "composer/installers",
             "version": "v1.5.0",
@@ -937,9 +988,11 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "bonnier/willow-mu-plugins": 20
+    },
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.1"
