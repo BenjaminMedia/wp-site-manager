@@ -35,7 +35,5 @@
     "psr-4": {
       "Bonnier\\WP\\SiteManager\\": "src"
     }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+  }
 }
