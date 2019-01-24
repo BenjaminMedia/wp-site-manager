@@ -5,6 +5,7 @@ namespace Bonnier\WP\SiteManager\Repositories;
 use Bonnier\WP\SiteManager\Http\SiteManagerClient;
 use Bonnier\WP\SiteManager\Contracts\SiteContract;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 
 /**
  * Class SiteRepository
@@ -49,6 +50,8 @@ class SiteRepository implements SiteContract
         try {
             $response = $this->siteManagerClient->get('/api/v1/sites/'.$siteId);
         } catch (ClientException $e) {
+            return null;
+        } catch (ServerException $e) {
             return null;
         }
         return $response->getStatusCode() === 200 ?

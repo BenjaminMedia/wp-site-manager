@@ -3,6 +3,7 @@
 namespace Bonnier\WP\SiteManager\Services;
 
 use Bonnier\WP\SiteManager\Contracts\SiteContract;
+use Bonnier\WP\SiteManager\Exceptions\SiteNotFoundException;
 
 class SiteService extends BaseService
 {
@@ -34,17 +35,30 @@ class SiteService extends BaseService
 
     /**
      * @param $siteId
+     *
      * @return mixed
+     * @throws \Bonnier\WP\SiteManager\Exceptions\SiteNotFoundException
      */
     public function findById($siteId)
     {
-        $cacheKey = sprintf('%s_%s', self::SITEMANAGER_SITE_CACHEKEY, $siteId);
-        $result = wp_cache_get($cacheKey, self::SITEMANAGER_CACHE_GROUP);
-        if (false === $result) {
-            $result = $this->siteRepository->findById($siteId);
-            wp_cache_set($cacheKey, $result, self::SITEMANAGER_CACHE_GROUP, self::SITEMANAGER_CACHE_EXPIRE);
+        $cacheKey = sprintf('%s_%s_%s', self::SITEMANAGER_CACHE_GROUP, self::SITEMANAGER_SITE_CACHEKEY, $siteId);
+        $result = get_transient($cacheKey);
+        if (false === $result || $this->shouldUpdateCache($result)) {
+            if ($site = $this->siteRepository->findById($siteId)) {
+                $result = [
+                    'data' => $site,
+                    'timestamp' => time()
+                ];
+                set_transient($cacheKey, $result);
+            } elseif (false === $result) {
+                throw new SiteNotFoundException(sprintf('Failed fetching site by id: %s', $siteId));
+            }
         }
+        return $result['data'];
+    }
 
-        return $result;
+    private function shouldUpdateCache($cacheResponse)
+    {
+        return (time() - $cacheResponse['timestamp'] ?? time()) > self::SITEMANAGER_CACHE_EXPIRE;
     }
 }
