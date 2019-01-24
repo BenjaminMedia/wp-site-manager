@@ -5,7 +5,7 @@ namespace Bonnier\WP\SiteManager\Services;
 abstract class BaseService
 {
     // Cache expire time (in sec)
-    const SITEMANAGER_CACHE_EXPIRE = "1800";
+    const SITEMANAGER_CACHE_EXPIRE = "3200";
     // Cache group
     const SITEMANAGER_CACHE_GROUP = "bonnier-wp-sitemanager";
 
