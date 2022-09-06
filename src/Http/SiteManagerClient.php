@@ -10,7 +10,7 @@ class SiteManagerClient extends Client
 
     public function __construct()
     {
-        $host = env('SITE_MANAGER_HOST', '');
+        $host = getenv('SITE_MANAGER_HOST', '');
         if (!$host) {
             add_action('admin_notices', function () {
                 echo sprintf(
